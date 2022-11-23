@@ -1,0 +1,62 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+//the following would of course typically be contained in 
+//header files. But given this is a github portfolio file 
+//I have kept it a part of the main.cpp file
+
+template <typename T>
+class Item {
+private:
+    std::string name;           //this class will always require a string
+    T value;                    //template parameter
+public:
+    Item(std::string name, T value) : name{name}, value{value}
+    {}
+    std::string get_name() const { return name; }
+    T get_value() const { return value; } //this getter returns value, value being determined by the parameters passed in to the template class.
+};
+
+template <typename T1, typename T2>
+struct My_pair {
+    T1 first_value;
+    T2 second_value;
+};
+
+int main()
+{
+    Item <int> item1{ "Jenny", 100 }; //the 100 is the template T value.
+    Item <std::string> item2{ "Jenny", "Elizabeth" }; //the template will be passed a string as it's value parameter.
+    Item <Item<std::string>> item3{ "Jenny", {"Elizabeth", "Gabriel"} }; //item3's T value is another item with a passed in string and a Tvalue of it's own that is a string.
+    std::cout << item1.get_name() << " " << item1.get_value() << std::endl;
+    std::cout << item2.get_name() << " " << item2.get_value() << std::endl;
+    std::cout << item3.get_name() << " "
+        << item3.get_value().get_name() << " "
+        << item3.get_value().get_value() << std::endl;  
+    Item < Item<Item<int>>> item4{ "Jenny", {"Elizabth", {"Gabriel", 100}} };
+    std::cout << item4.get_name() << " "
+        << item4.get_value().get_name() << " "
+        << item4.get_value().get_value().get_name() << " "
+        << item4.get_value().get_value().get_value() << std::endl;
+    
+    std::cout << "\n=========Vector Example==========" << std::endl << std::endl;
+    std::vector<Item<double>> vec1{}; //this vector example uses the Item class and a double as the template typename, T value.
+    vec1.push_back(Item<double>("Jenny", 100));
+    vec1.push_back(Item<double>("Elizabeth", 200));
+    vec1.push_back(Item<double>("Gabriel", 300));
+    for (const auto& item : vec1) {  //using a range based for loop to print out the Item's with the vector.
+        std::cout << item.get_name() << " " << item.get_value() << std::endl;
+
+    }
+
+    std::cout << "\n===========My Pair===============" << std::endl << std::endl;
+    My_pair <std::string, int> p1{ "Jenny", 100 };//Template class with two typenames being passed in, this case see's a string and an int.
+    My_pair <int, double> p2 {124, 13.6};            //Template class with two typenames being passed in, this case see's an int and a double.
+    std::cout << p1.first_value << std::endl;
+    std::cout << p1.second_value << std::endl;
+    std::cout << p2.first_value << std::endl;
+    std::cout << p2.second_value << std::endl;
+
+    return 0;
+}
